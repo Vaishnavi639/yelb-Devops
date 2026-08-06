@@ -7,9 +7,6 @@ on:
       - 'yelb-ui/**'
       - 'yelb-appserver/**'
 
-env:
-  IMAGE_OWNER: ${{ github.repository_owner }}
-
 jobs:
   changes:
     runs-on: ubuntu-latest
@@ -36,6 +33,10 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+      - name: Lowercase owner name
+        run: echo "IMAGE_OWNER_LC=${OWNER,,}" >> $GITHUB_ENV
+        env:
+          OWNER: ${{ github.repository_owner }}
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -46,8 +47,8 @@ jobs:
           context: ./yelb-ui
           push: true
           tags: |
-            ghcr.io/${{ env.IMAGE_OWNER }}/yelb-ui:${{ github.sha }}
-            ghcr.io/${{ env.IMAGE_OWNER }}/yelb-ui:latest
+            ghcr.io/${{ env.IMAGE_OWNER_LC }}/yelb-ui:${{ github.sha }}
+            ghcr.io/${{ env.IMAGE_OWNER_LC }}/yelb-ui:latest
       - uses: ./.github/actions/bump-gitops
         with:
           service: yelb-ui
@@ -63,6 +64,10 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+      - name: Lowercase owner name
+        run: echo "IMAGE_OWNER_LC=${OWNER,,}" >> $GITHUB_ENV
+        env:
+          OWNER: ${{ github.repository_owner }}
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -73,8 +78,8 @@ jobs:
           context: ./yelb-appserver
           push: true
           tags: |
-            ghcr.io/${{ env.IMAGE_OWNER }}/yelb-appserver:${{ github.sha }}
-            ghcr.io/${{ env.IMAGE_OWNER }}/yelb-appserver:latest
+            ghcr.io/${{ env.IMAGE_OWNER_LC }}/yelb-appserver:${{ github.sha }}
+            ghcr.io/${{ env.IMAGE_OWNER_LC }}/yelb-appserver:latest
       - uses: ./.github/actions/bump-gitops
         with:
           service: yelb-appserver
