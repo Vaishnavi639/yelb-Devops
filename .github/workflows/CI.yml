@@ -1,0 +1,82 @@
+name: Build and Push Images
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'yelb-ui/**'
+      - 'yelb-appserver/**'
+
+env:
+  IMAGE_OWNER: ${{ github.repository_owner }}
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      ui: ${{ steps.filter.outputs.ui }}
+      appserver: ${{ steps.filter.outputs.appserver }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            ui:
+              - 'yelb-ui/**'
+            appserver:
+              - 'yelb-appserver/**'
+
+  build-ui:
+    needs: changes
+    if: needs.changes.outputs.ui == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./yelb-ui
+          push: true
+          tags: |
+            ghcr.io/${{ env.IMAGE_OWNER }}/yelb-ui:${{ github.sha }}
+            ghcr.io/${{ env.IMAGE_OWNER }}/yelb-ui:latest
+      - uses: ./.github/actions/bump-gitops
+        with:
+          service: yelb-ui
+          tag: ${{ github.sha }}
+          gitops-token: ${{ secrets.GITOPS_PAT }}
+
+  build-appserver:
+    needs: changes
+    if: needs.changes.outputs.appserver == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./yelb-appserver
+          push: true
+          tags: |
+            ghcr.io/${{ env.IMAGE_OWNER }}/yelb-appserver:${{ github.sha }}
+            ghcr.io/${{ env.IMAGE_OWNER }}/yelb-appserver:latest
+      - uses: ./.github/actions/bump-gitops
+        with:
+          service: yelb-appserver
+          tag: ${{ github.sha }}
+          gitops-token: ${{ secrets.GITOPS_PAT }}
