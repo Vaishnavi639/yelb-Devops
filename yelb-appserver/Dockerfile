@@ -1,7 +1,7 @@
 FROM bitnami/ruby:2.7.4
 MAINTAINER massimo@it20.info
 
-################## BEGIN INSTALLATION ######################
+################## BEGIN INSTALLATION #####################
 
 # Set the working directory to /app
 WORKDIR /app
