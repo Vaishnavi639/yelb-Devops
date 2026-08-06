@@ -2,7 +2,7 @@ This is the user interface module. It's an Angular2 application that uses the VM
 
 The way this works may be a bit cumbersome. I basically clone the Clarity seed, I check out a specific commit (one that I have tested) and then copy/replace the files that are in the directory `clarity-seed-newfiles`. These files are both code and configuration of my app. You can look at the mechanics of how this happens either in the `Dockerfile` in this directory or in the `yelb-ui.sh` script in the `deployments/platformdeployment/Linux` directory. 
 
-Depending on the deployment model being used, the compiling of the Angular2 application happens at different times. 
+Depending on the deployment model being used, the compiling of the Angular2 application happens at different times
 
 For the EC2 deployment model, the UI gets compiled at deployment time via running the setup via cloud-init scripts. This is why the app may take a while to become available even though the CFN stack says it's all green and good. The instance where the UI is deployed takes about 5 minutes (or more depending on the instance type) to compile everything and start vending the javascript code. 
 
