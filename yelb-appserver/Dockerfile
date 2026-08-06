@@ -17,7 +17,8 @@ ENV RACK_ENV=production
 RUN gem install sinatra --no-document
 RUN gem install redis --no-document
 ### hack to allow the setup of the pg gem (which would fail otherwise)
-RUN apt-get update
+RUN sed -i -e 's|deb.debian.org|archive.debian.org|g' -e 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' /etc/apt/sources.list
+RUN apt-get -o Acquire::Check-Valid-Until=false update
 RUN apt-get install libpq-dev -y
 ### end of hack (this would require additional research and optimization)
 RUN gem install pg --no-document
