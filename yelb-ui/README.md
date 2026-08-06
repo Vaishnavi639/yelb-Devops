@@ -1,6 +1,6 @@
 This is the user interface module. It's an Angular2 application that uses the VMware open source [Clarity framework](https://clarity.design/).
 
-The way this works may be a bit cumbersome. I basically clone the Clarity seed, I check out a specific commit (one that I have tested) and then copy/replace the files that are in the directory `clarity-seed-newfiles`. These files are both code and configuration of my app. You can look at the mechanics of how this happens either in the `Dockerfile` in this directory or in the `yelb-ui.sh` script in the `deployments/platformdeployment/Linux` directory. 
+The way this works may be a bit cumbersome. I basically clone the Clarity seed, I check out a specific commit (one that I have tested) and then copy/replace the files that are in the directory `clarity-seed-newfiles`. These files are both code and configuration of my app. You can look at the mechanics of how this happens either in the `Dockerfile` in this directory or in the `yelb-ui.sh` script in the `deployments/platformdeployment/Linux` directory
 
 Depending on the deployment model being used, the compiling of the Angular2 application happens at different times
 
